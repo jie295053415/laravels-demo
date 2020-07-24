@@ -5,6 +5,7 @@ namespace App\Models;
 
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Log;
 
 class User extends Model
 {
@@ -35,5 +36,11 @@ class User extends Model
     public function getData(): array
     {
         return $this->data;
+    }
+
+    public function handleProcess()
+    {
+        sleep(86400);
+        Log::info('user process handle code' . PHP_EOL);
     }
 }

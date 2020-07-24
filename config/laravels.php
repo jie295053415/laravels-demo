@@ -26,18 +26,50 @@ return [
         'enable'  => true, // 是否启用，默认为true
         'handler' => \App\Services\WebSocketService::class, // websocket处理类, 如果是socket.io可参考https://socket.io/docs/
     ],
-    'sockets'                  => [ // rpc服务器就是这里配置的
+    // 多端口监听
+    'sockets'                  => [
         [
-            'enable'   => true, // 是否启用，默认为false
+            'enable'   => true, // 是否启用，默认为true
             'host'     => '0.0.0.0',
-            'port'     => 9528,
+            'port'     => 9530,
             'type'     => SWOOLE_SOCK_TCP,// 支持的嵌套字类型：https://wiki.swoole.com/#/consts?id=socket-%e7%b1%bb%e5%9e%8b
             'settings' => [// Swoole可用的配置项：https://wiki.swoole.com/#/server/port?id=%e5%8f%af%e9%80%89%e5%8f%82%e6%95%b0
                 'open_eof_check' => true,
-                'package_eof'    => "\r\n\r\n",
+                'package_eof'    => "\r\n",
             ],
             'handler'  => \App\Sockets\TestTcpSocket::class,
-
+        ],
+        [
+            'enable'   => true, // 是否启用，默认为true
+            'host'     => '0.0.0.0',
+            'port'     => 9531,
+            'type'     => SWOOLE_SOCK_UDP,
+            'settings' => [
+                'open_eof_check' => true,
+                'package_eof'    => "\r\n",
+            ],
+            'handler'  => \App\Sockets\TestUdpSocket::class,
+        ],
+        [
+            'enable'   => true, // 是否启用，默认为true
+            'host'     => '0.0.0.0',
+            'port'     => 9532,
+            'type'     => SWOOLE_SOCK_TCP,
+            'settings' => [
+                'open_http_protocol' => true,
+            ],
+            'handler'  => \App\Sockets\TestHttp::class,
+        ],
+        [
+            'enable'   => true, // 是否启用，默认为true
+            'host'     => '0.0.0.0',
+            'port'     => 9533,
+            'type'     => SWOOLE_SOCK_TCP,
+            'settings' => [
+                'open_http_protocol'      => true,
+                'open_websocket_protocol' => true,
+            ],
+            'handler'  => \App\Sockets\TestWebSocket::class,
         ],
     ],
     // 用户进程
