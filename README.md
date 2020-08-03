@@ -6,8 +6,6 @@ demo是采用PHP(7.3.8)、Swoole(4.5.2)、LaravelS(3.7.6)、Laravel(7.21.0)构�
 
 在laravel-s QQ群中很多人对laravel-s的文档有些地方不太清楚, 这个demo就是把文档中的样例全部写到这个里面了
 
-<img src="https://github.com/jie295053415/laravels-demo/storage/images/start.png" width="100%">
-
 ## 使用
 
 1.下载
@@ -40,10 +38,6 @@ $ php bin/laravels start
 
 ##免责声明
 本项目开源且免费，仅用于交流学习，本项目亦不承担任何责任
-
-## 贊助
-
-<img src="https://github.com/jie295053415/laravels-demo/storage/images/alipay.jpg" width="100%">
 
 ## License
 
