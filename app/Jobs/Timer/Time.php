@@ -14,7 +14,7 @@ class Time extends CronJob
     // --- 重载对应的方法来返回配置：开始
     public function interval()
     {
-        return 1000 * 60;// 每60秒运行一次
+        return 1000 * 3600;// 每60秒运行一次
     }
 
     public function isImmediate()
@@ -26,6 +26,6 @@ class Time extends CronJob
 
     public function run()
     {
-        Log::info('test time: ' . $this->i++);
+        Log::info(__METHOD__, [$this->i++]);
     }
 }

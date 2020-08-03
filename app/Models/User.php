@@ -41,6 +41,6 @@ class User extends Model
     public function handleProcess()
     {
         sleep(86400);
-        Log::info('user process handle code' . PHP_EOL);
+        Log::info(__METHOD__, ['User process handle']);
     }
 }

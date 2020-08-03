@@ -14,13 +14,15 @@ return [
     'handle_static'            => env('LARAVELS_HANDLE_STATIC', false),
     'laravel_base_path'        => env('LARAVEL_BASE_PATH', base_path()),
     'inotify_reload'           => [
-        'enable'        => env('LARAVELS_INOTIFY_RELOAD', false),
+        'enable'        => env('LARAVELS_INOTIFY_RELOAD', true),
         'watch_path'    => base_path(),
         'file_types'    => ['.php'],
         'excluded_dirs' => [],
         'log'           => true,
     ],
-    'event_handlers'           => [],
+    'event_handlers'           => [
+        'ServerStart' => [\App\Events\ServerStartEvent::class], // 按数组顺序触发事件
+    ],
     // websocket 参数
     'websocket'                => [
         'enable'  => true, // 是否启用，默认为true
@@ -31,7 +33,7 @@ return [
         [
             'enable'   => true, // 是否启用，默认为true
             'host'     => '0.0.0.0',
-            'port'     => 9530,
+            'port'     => 5555,
             'type'     => SWOOLE_SOCK_TCP,// 支持的嵌套字类型：https://wiki.swoole.com/#/consts?id=socket-%e7%b1%bb%e5%9e%8b
             'settings' => [// Swoole可用的配置项：https://wiki.swoole.com/#/server/port?id=%e5%8f%af%e9%80%89%e5%8f%82%e6%95%b0
                 'open_eof_check' => true,
@@ -42,7 +44,7 @@ return [
         [
             'enable'   => true, // 是否启用，默认为true
             'host'     => '0.0.0.0',
-            'port'     => 9531,
+            'port'     => 6666,
             'type'     => SWOOLE_SOCK_UDP,
             'settings' => [
                 'open_eof_check' => true,
@@ -53,7 +55,7 @@ return [
         [
             'enable'   => true, // 是否启用，默认为true
             'host'     => '0.0.0.0',
-            'port'     => 9532,
+            'port'     => 7777,
             'type'     => SWOOLE_SOCK_TCP,
             'settings' => [
                 'open_http_protocol' => true,
@@ -63,7 +65,7 @@ return [
         [
             'enable'   => true, // 是否启用，默认为true
             'host'     => '0.0.0.0',
-            'port'     => 9533,
+            'port'     => 8888,
             'type'     => SWOOLE_SOCK_TCP,
             'settings' => [
                 'open_http_protocol'      => true,
@@ -87,7 +89,7 @@ return [
         ],
     ],
     'timer'                    => [
-        'enable'        => env('LARAVELS_TIMER', false),
+        'enable'        => env('LARAVELS_TIMER', true),
         'jobs'          => [
             // Enable LaravelScheduleJob to run `php artisan schedule:run` every 1 minute, replace Linux Crontab
             //\Hhxsv5\LaravelS\Illuminate\LaravelScheduleJob::class,
@@ -95,12 +97,38 @@ return [
             // [\App\Jobs\XxxCronJob::class, [1000, true]], // Pass in parameters when registering
             // \App\Jobs\XxxCronJob::class, // Override the corresponding method to return the configuration
             \App\Jobs\Timer\Time::class,
+            \Hhxsv5\LaravelS\Illuminate\LaravelScheduleJob::class
         ],
         'max_wait_time' => 5,
     ],
     'swoole_tables'            => [
         // 场景：WebSocket中UserId与FD绑定
-        'ws' => [// Key为Table名称，使用时会自动添加Table后缀，避免重名。这里定义名为wsTable的Table
+        'user'   => [// Key为Table名称，使用时会自动添加Table后缀，避免重名。这里定义名为wsTable的Table
+            'size'   => 1024,//Table的最大行数
+            'column' => [// Table的列定义
+                [
+                    'name' => 'fd',
+                    'type' => \Swoole\Table::TYPE_INT,
+                    'size' => 8
+                ],
+                [
+                    'name' => 'user_id',
+                    'type' => \Swoole\Table::TYPE_INT,
+                    'size' => 8
+                ],
+                [
+                    'name' => 'name',
+                    'type' => \Swoole\Table::TYPE_STRING,
+                    'size' => 256
+                ],
+                [
+                    'name' => 'avatar',
+                    'type' => \Swoole\Table::TYPE_STRING,
+                    'size' => 256
+                ],
+            ],
+        ],
+        'socket' => [// Key为Table名称，使用时会自动添加Table后缀，避免重名。这里定义名为wsTable的Table
             'size'   => 1024,//Table的最大行数
             'column' => [// Table的列定义
                 [
@@ -142,7 +170,7 @@ return [
         'dispatch_mode'      => 2,
         'reactor_num'        => env('LARAVELS_REACTOR_NUM', function_exists('swoole_cpu_num') ? swoole_cpu_num() * 2 : 4),
         'worker_num'         => env('LARAVELS_WORKER_NUM', function_exists('swoole_cpu_num') ? swoole_cpu_num() * 2 : 8),
-        //'task_worker_num'    => env('LARAVELS_TASK_WORKER_NUM', function_exists('swoole_cpu_num') ? swoole_cpu_num() * 2 : 8),
+        'task_worker_num'    => env('LARAVELS_TASK_WORKER_NUM', function_exists('swoole_cpu_num') ? swoole_cpu_num() * 2 : 8),
         'task_ipc_mode'      => 1,
         'max_request'        => env('LARAVELS_MAX_REQUEST', 8000),
         'task_max_request'   => env('LARAVELS_TASK_MAX_REQUEST', 8000),

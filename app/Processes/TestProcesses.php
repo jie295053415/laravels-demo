@@ -20,8 +20,8 @@ class TestProcesses implements CustomProcessInterface
     {
         // 进程运行的代码，不能退出，一旦退出Manager进程会自动再次创建该进程。
         while (!self::$quit) {
-//            (new User)->handleProcess();
-            self::handleProcess();
+//            (new User)->handleProcess(); // 直接用模型
+            self::handleProcess(); // 用当前类静态方法
         }
     }
 

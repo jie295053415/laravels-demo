@@ -2,6 +2,7 @@
 
 namespace App\Console;
 
+use App\Console\Commands\TestCommand;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -13,7 +14,7 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        //
+        TestCommand::class,
     ];
 
     /**
@@ -24,6 +25,8 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
+        // runInBackground()方法会新启子进程执行任务，这是异步的，不会影响其他任务的执行时机
+        $schedule->command(TestCommand::class)->runInBackground()->hourly();
         // $schedule->command('inspire')->hourly();
     }
 
